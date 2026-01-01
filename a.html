@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>9:00 PM Beat Drop</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: black;
+  color: white;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+}
+
+#lock {
+  position: fixed;
+  inset: 0;
+  background: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  cursor: pointer;
+  z-index: 10;
+  text-align: center;
+}
+
+#ui {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+#countdown {
+  font-size: 4rem;
+  letter-spacing: 0.1em;
+}
+
+#songCountdown {
+  font-size: 1.5rem;
+  margin-top: 15px;
+  opacity: 0.5;
+}
+
+#happy {
+  font-size: 3rem;
+  margin-top: 25px;
+  opacity: 0;
+  transition: opacity 1.5s ease;
+}
+</style>
+</head>
+<body>
+
+<div id="lock">
+  Click to arm audio<br>
+  <span style="font-size:1rem;opacity:.6">(Required)</span>
+</div>
+
+<div id="ui">
+  <div id="countdown">--:--:--</div>
+  <div id="songCountdown"></div>
+  <div id="happy">🎉 IT'S 9:00 PM 🎉</div>
+</div>
+
+<audio id="song" src="song.mp3"></audio>
+
+<script>
+const DROP_TIME = 301; // 5:01
+
+const lock = document.getElementById("lock");
+const audio = document.getElementById("song");
+const countdownEl = document.getElementById("countdown");
+const songCountdownEl = document.getElementById("songCountdown");
+const happyEl = document.getElementById("happy");
+
+let armed = false;
+let songStarted = false;
+
+// ---------------- WAKE LOCK ----------------
+async function keepAwake() {
+  try {
+    if ("wakeLock" in navigator) {
+      await navigator.wakeLock.request("screen");
+    }
+  } catch {}
+}
+
+// ---------------- CLICK TO ARM ----------------
+lock.addEventListener("click", () => {
+  audio.muted = true;
+  audio.play().then(() => {
+    setTimeout(() => {
+      audio.pause();
+      audio.currentTime = 0;
+      audio.muted = false;
+      armed = true;
+      lock.style.display = "none";
+      keepAwake();
+    }, 100);
+  });
+});
+
+// ---------------- TARGET TIME (9:00 PM) ----------------
+const targetTime = new Date();
+targetTime.setHours(21, 0, 0, 0); // 9:00 PM today
+
+// If it's already past 9 PM, use tomorrow
+if (Date.now() > targetTime.getTime()) {
+  targetTime.setDate(targetTime.getDate() + 1);
+}
+
+function fmt(sec) {
+  sec = Math.max(0, Math.ceil(sec));
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+}
+
+// ---------------- COUNTDOWN ----------------
+function update() {
+  const now = new Date();
+  const diff = targetTime - now;
+
+  if (diff <= 0) {
+    countdownEl.textContent = "00:00:00";
+    songCountdownEl.textContent = "";
+    happyEl.style.opacity = 1;
+    return;
+  }
+
+  const totalSec = diff / 1000;
+
+  // Start song so drop hits 9:00 PM
+  if (armed && !songStarted && totalSec <= DROP_TIME) {
+    audio.currentTime = DROP_TIME - totalSec;
+    audio.play();
+    songStarted = true;
+  }
+
+  // Main countdown
+  const h = Math.floor(totalSec / 3600);
+  const m = Math.floor(totalSec / 60) % 60;
+  const s = Math.floor(totalSec) % 60;
+
+  countdownEl.textContent =
+    `${String(h).padStart(2,"0")}:` +
+    `${String(m).padStart(2,"0")}:` +
+    `${String(s).padStart(2,"0")}`;
+
+  // Song countdown
+  if (!songStarted && armed) {
+    songCountdownEl.textContent =
+      `Song starts in ${fmt(totalSec - DROP_TIME)}`;
+  } else {
+    songCountdownEl.textContent = "";
+  }
+}
+
+setInterval(update, 100);
+update();
+</script>
+
+</body>
+</html>
