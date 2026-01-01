@@ -84,31 +84,20 @@ canvas {
 <audio id="song" src="song.mp3"></audio>
 
 <script>
-// ================= CONFIG =================
 document.title = "THE SHOW"; // LOCK TITLE
 const TARGET_HOUR = 21;
 const TARGET_MIN = 10;
-
-// DROP AT 4:58 (LOCKED)
 const DROP_MINUTES = 4;
 const DROP_SECONDS = 58;
 const DROP_TIME = DROP_MINUTES * 60 + DROP_SECONDS; // 298 seconds
-
-const AUDIO_OFFSET = 0.0; // adjust if TV is late (0.15–0.25)
-
-// ================= ELEMENTS =================
 const lock = document.getElementById("lock");
 const audio = document.getElementById("song");
 const countdownEl = document.getElementById("countdown");
 const songCountdownEl = document.getElementById("songCountdown");
 const syncBtn = document.getElementById("syncBtn");
-
-// ================= STATE =================
 let armed = false;
 let songStarted = false;
 let fireworksActive = false;
-
-// ================= WAKE LOCK =================
 async function keepAwake() {
   try {
     if ("wakeLock" in navigator) {
@@ -116,8 +105,6 @@ async function keepAwake() {
     }
   } catch {}
 }
-
-// ================= CLICK TO ARM =================
 lock.addEventListener("click", () => {
   audio.muted = true;
   audio.play().then(() => {
@@ -131,22 +118,16 @@ lock.addEventListener("click", () => {
     }, 100);
   });
 });
-
-// ================= TARGET TIME =================
 let targetTime = new Date();
 targetTime.setHours(TARGET_HOUR, TARGET_MIN, 0, 0);
 if (Date.now() > targetTime.getTime()) {
   targetTime.setDate(targetTime.getDate() + 1);
 }
-
-// ================= SYNC =================
 syncBtn.onclick = () => {
   if (!armed) return;
   songStarted = false;
   audio.pause();
 };
-
-// ================= HELPERS =================
 function fmt(sec) {
   sec = Math.max(0, Math.ceil(sec));
   const m = Math.floor(sec / 60);
@@ -193,8 +174,6 @@ function update() {
 
 setInterval(update, 100);
 update();
-
-// ================= FIREWORKS =================
 const canvas = document.getElementById("fireworks");
 const ctx = canvas.getContext("2d");
 
