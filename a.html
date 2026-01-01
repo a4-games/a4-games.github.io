@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>9:00 PM Beat Drop</title>
+<title>9:10 PM Beat Drop</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
@@ -68,7 +68,7 @@ html, body {
 <div id="ui">
   <div id="countdown">--:--:--</div>
   <div id="songCountdown"></div>
-  <div id="happy">🎉 IT'S 9:00 PM 🎉</div>
+  <div id="happy">🎉 IT'S 9:10 PM 🎉</div>
 </div>
 
 <audio id="song" src="song.mp3"></audio>
@@ -109,11 +109,11 @@ lock.addEventListener("click", () => {
   });
 });
 
-// ---------------- TARGET TIME (9:00 PM) ----------------
+// ---------------- TARGET TIME (9:10 PM) ----------------
 const targetTime = new Date();
-targetTime.setHours(21, 0, 0, 0); // 9:00 PM today
+targetTime.setHours(21, 10, 0, 0); // 9:10 PM today
 
-// If it's already past 9 PM, use tomorrow
+// If already past 9:10 PM, use tomorrow
 if (Date.now() > targetTime.getTime()) {
   targetTime.setDate(targetTime.getDate() + 1);
 }
@@ -139,7 +139,7 @@ function update() {
 
   const totalSec = diff / 1000;
 
-  // Start song so drop hits 9:00 PM
+  // Start song so drop hits 9:10 PM
   if (armed && !songStarted && totalSec <= DROP_TIME) {
     audio.currentTime = DROP_TIME - totalSec;
     audio.play();
