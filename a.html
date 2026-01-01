@@ -13,6 +13,9 @@ html, body {
   background: black;
   color: white;
   font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   overflow: hidden;
 }
 
@@ -29,40 +32,25 @@ html, body {
   text-align: center;
 }
 
-#ui {
-  position: absolute;
+#countdown {
+  font-size: 5rem;
+  letter-spacing: 0.1em;
+  transition: opacity 1s ease;
+}
+
+#messagePopup {
+  position: fixed;
   inset: 0;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  z-index: 2;
-}
-
-#countdown {
-  font-size: 4rem;
-  letter-spacing: 0.1em;
-}
-
-#songCountdown {
-  font-size: 1.4rem;
-  margin-top: 15px;
-  opacity: 0.5;
-}
-
-#syncBtn {
-  margin-top: 25px;
-  padding: 10px 22px;
-  font-size: 1.1rem;
-  cursor: pointer;
-}
-
-canvas {
-  position: fixed;
-  inset: 0;
+  font-size: 2rem;
+  color: white;
+  background: rgba(0,0,0,0.85);
+  opacity: 0;
   pointer-events: none;
-  z-index: 1;
+  transition: opacity 1s ease;
 }
 </style>
 </head>
@@ -73,158 +61,76 @@ canvas {
   <span style="font-size:1rem;opacity:.6">(Required)</span>
 </div>
 
-<canvas id="fireworks"></canvas>
-
-<div id="ui">
-  <div id="countdown">--:--:--</div>
-  <div id="songCountdown"></div>
-  <button id="syncBtn">Sync</button>
-</div>
-
-<audio id="song" src="song.mp3"></audio>
+<div id="countdown">--:--:--</div>
+<div id="messagePopup">LET US MAKE THIS YEAR BETTER THAN THE LAST, SHALL WE NOT?</div>
 
 <script>
+// ================= CONFIG =================
 document.title = "THE SHOW"; // LOCK TITLE
-const TARGET_HOUR = 21;
-const TARGET_MIN = 10;
-const DROP_MINUTES = 4;
-const DROP_SECONDS = 58;
-const DROP_TIME = DROP_MINUTES * 60 + DROP_SECONDS; // 298 seconds
+const TARGET_HOUR = 0;   // midnight
+const TARGET_MIN = 0;
+const TARGET_SEC = 0;
+
 const lock = document.getElementById("lock");
-const audio = document.getElementById("song");
 const countdownEl = document.getElementById("countdown");
-const songCountdownEl = document.getElementById("songCountdown");
-const syncBtn = document.getElementById("syncBtn");
+const messagePopup = document.getElementById("messagePopup");
+
 let armed = false;
-let songStarted = false;
-let fireworksActive = false;
-async function keepAwake() {
-  try {
-    if ("wakeLock" in navigator) {
-      await navigator.wakeLock.request("screen");
-    }
-  } catch {}
-}
+
+// ================= CLICK TO ARM =================
 lock.addEventListener("click", () => {
-  audio.muted = true;
-  audio.play().then(() => {
-    setTimeout(() => {
-      audio.pause();
-      audio.currentTime = 0;
-      audio.muted = false;
-      armed = true;
-      lock.style.display = "none";
-      keepAwake();
-    }, 100);
-  });
+  armed = true;
+  lock.style.display = "none";
 });
-let targetTime = new Date();
-targetTime.setHours(TARGET_HOUR, TARGET_MIN, 0, 0);
-if (Date.now() > targetTime.getTime()) {
-  targetTime.setDate(targetTime.getDate() + 1);
-}
-syncBtn.onclick = () => {
-  if (!armed) return;
-  songStarted = false;
-  audio.pause();
-};
-function fmt(sec) {
-  sec = Math.max(0, Math.ceil(sec));
-  const m = Math.floor(sec / 60);
-  const s = sec % 60;
-  return `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+
+// ================= TARGET TIME =================
+function getNextMidnight() {
+  let now = new Date();
+  let next = new Date(now.getFullYear(), now.getMonth(), now.getDate(), TARGET_HOUR, TARGET_MIN, TARGET_SEC, 0);
+  if (now >= next) next.setDate(next.getDate() + 1);
+  return next;
 }
 
+let targetTime = getNextMidnight();
+
 // ================= COUNTDOWN =================
+function fmt(sec) {
+  sec = Math.max(0, Math.ceil(sec));
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor(sec / 60) % 60;
+  const s = sec % 60;
+  return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+}
+
 function update() {
-  document.title = "THE SHOW"; // reinforce title
+  document.title = "THE SHOW"; // keep title fixed
+  if (!armed) return;
+
   const now = new Date();
-  const diff = targetTime - now;
-  const totalSec = diff / 1000;
+  const diff = (targetTime - now)/1000; // seconds
 
   if (diff <= 0) {
     countdownEl.textContent = "00:00:00";
-    songCountdownEl.textContent = "";
-    if (!fireworksActive) startFireworks();
+
+    // Fade out countdown after 5 seconds
+    setTimeout(() => {
+      countdownEl.style.opacity = 0;
+    }, 5000);
+
+    // Show message popup 10 seconds after 12:00
+    setTimeout(() => {
+      messagePopup.style.opacity = 1;
+      messagePopup.style.pointerEvents = "auto";
+    }, 10000);
+
     return;
   }
 
-  if (armed && !songStarted && totalSec <= DROP_TIME) {
-    audio.currentTime = Math.max(0, DROP_TIME - totalSec + AUDIO_OFFSET);
-    audio.play();
-    songStarted = true;
-  }
-
-  const h = Math.floor(totalSec / 3600);
-  const m = Math.floor(totalSec / 60) % 60;
-  const s = Math.floor(totalSec) % 60;
-
-  countdownEl.textContent =
-    `${String(h).padStart(2,"0")}:` +
-    `${String(m).padStart(2,"0")}:` +
-    `${String(s).padStart(2,"0")}`;
-
-  if (!songStarted && armed) {
-    songCountdownEl.textContent =
-      `Song starts in ${fmt(totalSec - DROP_TIME)}`;
-  } else {
-    songCountdownEl.textContent = "";
-  }
+  countdownEl.textContent = fmt(diff);
 }
 
 setInterval(update, 100);
 update();
-const canvas = document.getElementById("fireworks");
-const ctx = canvas.getContext("2d");
-
-function resize() {
-  canvas.width = innerWidth;
-  canvas.height = innerHeight;
-}
-window.addEventListener("resize", resize);
-resize();
-
-let particles = [];
-
-function spawnFirework() {
-  const x = Math.random() * canvas.width;
-  const y = Math.random() * canvas.height * 0.5;
-  const count = 80;
-
-  for (let i = 0; i < count; i++) {
-    const angle = Math.random() * Math.PI * 2;
-    const speed = Math.random() * 5 + 2;
-    particles.push({
-      x, y,
-      vx: Math.cos(angle) * speed,
-      vy: Math.sin(angle) * speed,
-      life: 100,
-      color: `hsl(${Math.random()*360},100%,60%)`
-    });
-  }
-}
-
-function startFireworks() {
-  fireworksActive = true;
-  setInterval(spawnFirework, 700);
-  requestAnimationFrame(loop);
-}
-
-function loop() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  particles.forEach(p => {
-    p.x += p.vx;
-    p.y += p.vy;
-    p.vy += 0.05;
-    p.life--;
-    ctx.fillStyle = p.color;
-    ctx.fillRect(p.x, p.y, 2, 2);
-  });
-
-  particles = particles.filter(p => p.life > 0);
-  requestAnimationFrame(loop);
-}
 </script>
 
 </body>
