@@ -55,45 +55,33 @@ html, body {
 </style>
 </head>
 <body>
-
 <div id="lock">
   Click to arm audio<br>
   <span style="font-size:1rem;opacity:.6">(Required)</span>
 </div>
-
 <div id="countdown">--:--:--</div>
 <div id="messagePopup">LET US MAKE THIS YEAR BETTER THAN THE LAST, SHALL WE NOT?</div>
-
 <script>
-// ================= CONFIG =================
 document.title = "THE SHOW"; // LOCK TITLE
 const TARGET_HOUR = 0;   // midnight
 const TARGET_MIN = 0;
 const TARGET_SEC = 0;
-
 const lock = document.getElementById("lock");
 const countdownEl = document.getElementById("countdown");
 const messagePopup = document.getElementById("messagePopup");
-
 let armed = false;
-
-// ================= CLICK TO ARM =================
 lock.addEventListener("click", () => {
   armed = true;
   lock.style.display = "none";
 });
-
-// ================= TARGET TIME =================
 function getNextMidnight() {
   let now = new Date();
   let next = new Date(now.getFullYear(), now.getMonth(), now.getDate(), TARGET_HOUR, TARGET_MIN, TARGET_SEC, 0);
   if (now >= next) next.setDate(next.getDate() + 1);
   return next;
 }
-
 let targetTime = getNextMidnight();
 
-// ================= COUNTDOWN =================
 function fmt(sec) {
   sec = Math.max(0, Math.ceil(sec));
   const h = Math.floor(sec / 3600);
@@ -101,23 +89,19 @@ function fmt(sec) {
   const s = sec % 60;
   return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
 }
-
 function update() {
-  document.title = "THE SHOW"; // keep title fixed
+  document.title = "THE SHOW"; 
   if (!armed) return;
 
   const now = new Date();
-  const diff = (targetTime - now)/1000; // seconds
+  const diff = (targetTime - now)/1000; 
 
   if (diff <= 0) {
     countdownEl.textContent = "00:00:00";
 
-    // Fade out countdown after 5 seconds
     setTimeout(() => {
       countdownEl.style.opacity = 0;
     }, 5000);
-
-    // Show message popup 10 seconds after 12:00
     setTimeout(() => {
       messagePopup.style.opacity = 1;
       messagePopup.style.pointerEvents = "auto";
@@ -125,13 +109,10 @@ function update() {
 
     return;
   }
-
   countdownEl.textContent = fmt(diff);
 }
-
 setInterval(update, 100);
 update();
 </script>
-
-</body>
+</nody>
 </html>
