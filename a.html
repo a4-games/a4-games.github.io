@@ -55,13 +55,7 @@ html, body {
 </head>
 <body>
 
-<div id="lock">
-  Click to arm audio<br>
-  <span style="font-size:1rem;opacity:.6">(Required)</span>
-</div>
-
-<div id="countdown">--:--:--</div>
-<div id="messagePopup">LET US MAKE THIS YEAR BETTER THAN THE LAST, SHALL WE NOT?</div>
+<div id="messagePopup">THE SHOW HAS ENDED. YOU MAY RETURN 12/31/26. THANK YOU FOR YOUR COOPERATION.</div>
 
 <audio id="song" src="song.mp3"></audio>
 
@@ -71,73 +65,6 @@ const lock = document.getElementById("lock");
 const countdownEl = document.getElementById("countdown");
 const messagePopup = document.getElementById("messagePopup");
 const audio = document.getElementById("song");
-
-let armed = false;
-
-// ================= CLICK TO ARM =================
-lock.addEventListener("click", () => {
-  armed = true;
-  lock.style.display = "none";
-  // autoplay requires click to start
-  audio.muted = true;
-  audio.play().then(() => {
-    audio.pause();
-    audio.muted = false;
-  });
-});
-
-// ================= TARGET TIME =================
-function getNextMidnight() {
-  let now = new Date();
-  let next = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0,0,0,0);
-  if (now >= next) next.setDate(next.getDate()+1);
-  return next;
-}
-
-let targetTime = getNextMidnight();
-
-// ================= COUNTDOWN =================
-const DROP_OFFSET = 4*60 + 58; // 4:58
-
-function fmt(sec) {
-  sec = Math.max(0, Math.ceil(sec));
-  const h = Math.floor(sec / 3600);
-  const m = Math.floor(sec / 60) % 60;
-  const s = Math.floor(sec) % 60;
-  return `${String(h).padStart(2,"0")}:${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
-}
-
-function update() {
-  document.title = "THE SHOW"; // keep title fixed
-  if (!armed) return;
-
-  const now = new Date();
-  const diff = (targetTime - now)/1000; // seconds
-
-  // ================= PLAY SONG =================
-  // Start song DROP_OFFSET seconds early so drop hits 12:00
-  if (diff <= DROP_OFFSET && !audio.started) {
-    audio.currentTime = DROP_OFFSET - diff;
-    audio.play();
-    audio.started = true;
-  }
-
-  if (diff <= 0) {
-    countdownEl.textContent = "00:00:00";
-
-    // fade out countdown after 5 seconds
-    setTimeout(()=>{countdownEl.style.opacity=0},5000);
-
-    // show message 5 seconds later (10s total)
-    setTimeout(()=>{
-      messagePopup.style.opacity = 1;
-      messagePopup.style.pointerEvents = "auto";
-    },10000);
-    return;
-  }
-
-  countdownEl.textContent = fmt(diff);
-}
 
 setInterval(update,100);
 update();
