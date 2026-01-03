@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>QUIZ</title>
+<title>Dialogue</title>
 <style>
 html, body {
     margin: 0;
@@ -29,7 +29,7 @@ html, body {
     font-size: 24px;
     max-width: 800px;
     min-height: 3em;
-    white-space: pre-wrap; /* ← CRITICAL FIX */
+    white-space: pre-wrap;
 }
 
 #textbox {
@@ -55,7 +55,6 @@ html, body {
 
 #nextBtn:disabled {
     opacity: 0.4;
-    cursor: default;
 }
 </style>
 </head>
@@ -88,19 +87,17 @@ const dialogue = [
     { text: "WHO ARE YOU?", input: "name" },
 
     { text: () => `HELLO, ${name}` },
+
+    { text: "WHO IS SUBJECT?", input: "subjectGuess" },  // moved before relation
+
     { text: "WHAT RELATION DO YOU HAVE WITH SUBJECT", input: "relation" },
 
-    { text: "WHO IS [subject]?", input: "answer" },
-    
     { text: "MY FINAL QUESTION." },
     { text: "WHAT DO YOU THINK OF SUBJECT" },
-    { text: "PLEASE RESPOND BY REPLYING TO THE STORY." },
+    { text: "PLEASE RESPOND BY MESSAGING ME." },
     { text: "THANK YOU FOR YOUR TIME.", fadeOut: true },
 
-    { darkness: 10000 },
-
-    { text: "IF YOU DON'T KNOW WHO SUBJECT IS," },
-    { text: "WHO POSTED THE QR CODE?" }
+    { darkness: 5000 }
 ];
 
 function typeText(fullText, callback) {
@@ -113,24 +110,25 @@ function typeText(fullText, callback) {
         i++;
         if (i >= fullText.length) {
             clearInterval(typingInterval);
-            callback?.();
+            if (callback) callback();
         }
     }, TYPE_SPEED);
 }
 
-function showText(txt) {
+function showText(txt, afterTyping) {
     clearTimeout(timeout);
     canAdvance = false;
     nextBtn.style.display = "none";
+    textbox.style.display = "none";
 
     textEl.style.opacity = 0;
-
     requestAnimationFrame(() => {
         textEl.style.opacity = 1;
     });
 
     setTimeout(() => {
         typeText(txt, () => {
+            if (afterTyping) afterTyping();
             canAdvance = true;
             nextBtn.style.display = "inline-block";
             timeout = setTimeout(next, 10000);
@@ -144,6 +142,7 @@ function next() {
     clearTimeout(timeout);
     canAdvance = false;
     nextBtn.style.display = "none";
+    textbox.style.display = "none";
 
     const d = dialogue[index++];
 
@@ -154,13 +153,14 @@ function next() {
     }
 
     if (d.input) {
-        showText(d.text);
-        textbox.value = "";
-        textbox.style.display = "block";
-        textbox.focus();
-        textbox.onkeydown = e => {
-            if (e.key === "Enter") handleInput(d.input);
-        };
+        showText(d.text, () => {
+            textbox.value = "";
+            textbox.style.display = "block";
+            textbox.focus();
+            textbox.onkeydown = e => {
+                if (e.key === "Enter") handleInput(d.input);
+            };
+        });
         return;
     }
 
@@ -181,20 +181,9 @@ function handleInput(type) {
     textbox.style.display = "none";
 
     if (type === "name") {
-        if (v === "ANTHONY") {
-            document.body.innerHTML = "";
-            return;
-        }
-        if (v === "ANDREW") {
-            showText("PLEASE TRY AGAIN, SUBJECT.");
-            index--;
-            return;
-        }
-        if (v === "IDK" || v === "I DONT KNOW") {
-            showText("YOU SHOULD.");
-            index--;
-            return;
-        }
+        if (v === "ANTHONY") return blockPage();
+        if (v === "ANDREW") { index--; return showText("PLEASE TRY AGAIN, SUBJECT."); }
+        if (v === "IDK" || v === "I DONT KNOW") { index--; return showText("YOU SHOULD."); }
         name = textbox.value.trim();
     }
 
@@ -205,12 +194,20 @@ function handleInput(type) {
         if (v === "FAKE FRIEND") return showText("...");
     }
 
-        if (type === "answer") {
-        if (v === "ANDREW") {
-            showText("CORRECT.");
-            return;
-            
+    if (type === "subjectGuess") {
+        if (v === "ANTHONY") return blockPage();
+        if (v === "ANDREW") return showText("CORRECT.");
+        if (v === "ME") { index--; return showText("SELFISH. INCORRECT. TRY AGAIN"); }
+        if (v === "SUBJECT") { index--; return showText("YOU'RE NOT FUNNY. TRY AGAIN."); }
+        index--;
+        return showText("TRY AGAIN.");
+    }
+
     next();
+}
+
+function blockPage() {
+    document.body.innerHTML = "";
 }
 
 nextBtn.addEventListener("click", () => {
