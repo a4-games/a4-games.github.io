@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Dialogue</title>
+<title>QUIZ</title>
 <style>
 html, body {
     margin: 0;
@@ -90,12 +90,14 @@ const dialogue = [
     { text: () => `HELLO, ${name}` },
     { text: "WHAT RELATION DO YOU HAVE WITH SUBJECT", input: "relation" },
 
+    { text: "WHO IS [subject]?", input: "answer" },
+    
     { text: "MY FINAL QUESTION." },
     { text: "WHAT DO YOU THINK OF SUBJECT" },
     { text: "PLEASE RESPOND BY REPLYING TO THE STORY." },
     { text: "THANK YOU FOR YOUR TIME.", fadeOut: true },
 
-    { darkness: 5000 },
+    { darkness: 10000 },
 
     { text: "IF YOU DON'T KNOW WHO SUBJECT IS," },
     { text: "WHO POSTED THE QR CODE?" }
@@ -203,6 +205,11 @@ function handleInput(type) {
         if (v === "FAKE FRIEND") return showText("...");
     }
 
+        if (type === "answer") {
+        if (v === "ANDREW") {
+            showText("CORRECT.");
+            return;
+            
     next();
 }
 
