@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dialogue</title>
+<style>
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    background: black;
+    color: white;
+    font-family: monospace;
+}
+
+#container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    text-align: center;
+    padding: 40px;
+}
+
+#text {
+    opacity: 0;
+    transition: opacity 0.5s;
+    font-size: 24px;
+    max-width: 800px;
+    min-height: 3em;
+    white-space: pre-wrap; /* ← CRITICAL FIX */
+}
+
+#textbox {
+    display: none;
+    margin-top: 20px;
+    background: black;
+    color: white;
+    border: 1px solid white;
+    padding: 10px;
+    font-size: 18px;
+}
+
+#nextBtn {
+    margin-top: 30px;
+    background: black;
+    color: white;
+    border: 1px solid white;
+    padding: 10px 30px;
+    font-size: 16px;
+    cursor: pointer;
+    display: none;
+}
+
+#nextBtn:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+</style>
+</head>
+<body>
+
+<div id="container">
+    <div>
+        <div id="text"></div>
+        <input id="textbox" type="text" autocomplete="off">
+        <button id="nextBtn">[ NEXT ]</button>
+    </div>
+</div>
+
+<script>
+const textEl = document.getElementById("text");
+const textbox = document.getElementById("textbox");
+const nextBtn = document.getElementById("nextBtn");
+
+let index = 0;
+let timeout = null;
+let name = "";
+let canAdvance = false;
+let typingInterval = null;
+
+const TYPE_SPEED = 40;
+
+const dialogue = [
+    { text: "WELCOME." },
+    { text: "BEFORE WE START, I'D LIKE TO ASK YOU SOME QUESTIONS." },
+    { text: "WHO ARE YOU?", input: "name" },
+
+    { text: () => `HELLO, ${name}` },
+    { text: "WHAT RELATION DO YOU HAVE WITH SUBJECT", input: "relation" },
+
+    { text: "MY FINAL QUESTION." },
+    { text: "WHAT DO YOU THINK OF SUBJECT" },
+    { text: "PLEASE RESPOND BY REPLYING TO THE STORY." },
+    { text: "THANK YOU FOR YOUR TIME.", fadeOut: true },
+
+    { darkness: 5000 },
+
+    { text: "IF YOU DON'T KNOW WHO SUBJECT IS," },
+    { text: "WHO POSTED THE QR CODE?" }
+];
+
+function typeText(fullText, callback) {
+    clearInterval(typingInterval);
+    textEl.textContent = "";
+    let i = 0;
+
+    typingInterval = setInterval(() => {
+        textEl.textContent += fullText[i];
+        i++;
+        if (i >= fullText.length) {
+            clearInterval(typingInterval);
+            callback?.();
+        }
+    }, TYPE_SPEED);
+}
+
+function showText(txt) {
+    clearTimeout(timeout);
+    canAdvance = false;
+    nextBtn.style.display = "none";
+
+    textEl.style.opacity = 0;
+
+    requestAnimationFrame(() => {
+        textEl.style.opacity = 1;
+    });
+
+    setTimeout(() => {
+        typeText(txt, () => {
+            canAdvance = true;
+            nextBtn.style.display = "inline-block";
+            timeout = setTimeout(next, 10000);
+        });
+    }, 500);
+}
+
+function next() {
+    if (index >= dialogue.length) return;
+
+    clearTimeout(timeout);
+    canAdvance = false;
+    nextBtn.style.display = "none";
+
+    const d = dialogue[index++];
+
+    if (d.darkness) {
+        textEl.style.opacity = 0;
+        setTimeout(next, d.darkness);
+        return;
+    }
+
+    if (d.input) {
+        showText(d.text);
+        textbox.value = "";
+        textbox.style.display = "block";
+        textbox.focus();
+        textbox.onkeydown = e => {
+            if (e.key === "Enter") handleInput(d.input);
+        };
+        return;
+    }
+
+    const content = typeof d.text === "function" ? d.text() : d.text;
+    showText(content);
+
+    if (d.fadeOut) {
+        setTimeout(() => {
+            textEl.style.opacity = 0;
+            nextBtn.style.display = "none";
+            setTimeout(next, 1000);
+        }, 2000);
+    }
+}
+
+function handleInput(type) {
+    const v = textbox.value.trim().toUpperCase();
+    textbox.style.display = "none";
+
+    if (type === "name") {
+        if (v === "ANTHONY") {
+            document.body.innerHTML = "";
+            return;
+        }
+        if (v === "ANDREW") {
+            showText("PLEASE TRY AGAIN, SUBJECT.");
+            index--;
+            return;
+        }
+        if (v === "IDK" || v === "I DONT KNOW") {
+            showText("YOU SHOULD.");
+            index--;
+            return;
+        }
+        name = textbox.value.trim();
+    }
+
+    if (type === "relation") {
+        if (v === "FRIEND") return showText("OKAY.");
+        if (v === "CRUSH") return showText("PLEASE TELL HIM THEN.");
+        if (v === "PARTNER") return showText("I HOPE YOU'RE COUNTRY.");
+        if (v === "FAKE FRIEND") return showText("...");
+    }
+
+    next();
+}
+
+nextBtn.addEventListener("click", () => {
+    if (canAdvance) next();
+});
+
+next();
+</script>
+
+</body>
+</html>
