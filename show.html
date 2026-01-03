@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Countdown</title>
+  <title>SECOND SHOW</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
@@ -14,7 +14,6 @@
       justify-content: center;
       background: #000;
       color: #fff;
-      font-family: monospace;
       text-align: center;
     }
 
@@ -23,6 +22,7 @@
       padding: 1rem;
       max-width: 90%;
       word-wrap: break-word;
+      transition: font-family 0.2s linear;
     }
   </style>
 </head>
@@ -37,6 +37,45 @@
     const targetDate = new Date("2027-01-01T00:00:00");
     const countdownEl = document.getElementById("countdown");
 
+    const fonts = [
+      "monospace",
+      "serif",
+      "sans-serif",
+      "cursive",
+      "fantasy",
+      "system-ui",
+      "ui-monospace",
+      "ui-serif",
+      "ui-sans-serif",
+      "Segoe UI",
+      "Arial",
+      "Arial Black",
+      "Verdana",
+      "Tahoma",
+      "Trebuchet MS",
+      "Georgia",
+      "Times New Roman",
+      "Palatino Linotype",
+      "Book Antiqua",
+      "Courier New",
+      "Lucida Console",
+      "Lucida Sans Unicode",
+      "Impact",
+      "Comic Sans MS"
+    ];
+
+    let lastFont = null;
+
+    function getNextFont() {
+      let nextFont;
+      do {
+        nextFont = fonts[Math.floor(Math.random() * fonts.length)];
+      } while (nextFont === lastFont);
+
+      lastFont = nextFont;
+      return nextFont;
+    }
+
     function updateCountdown() {
       const now = new Date();
       let diff = targetDate - now;
@@ -44,6 +83,7 @@
       if (diff <= 0) {
         countdownEl.textContent = endMessage;
         clearInterval(timer);
+        clearInterval(fontTimer);
         return;
       }
 
@@ -56,9 +96,17 @@
         `${days}:${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
     }
 
+    function changeFont() {
+      countdownEl.style.fontFamily = getNextFont();
+    }
+
     const timer = setInterval(updateCountdown, 1000);
+    const fontTimer = setInterval(changeFont, 1000);
+
     updateCountdown();
+    changeFont();
   </script>
 
 </body>
 </html>
+
