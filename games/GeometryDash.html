@@ -20,18 +20,6 @@
             overflow: hidden;
         }
 
-        #gameContainer {
-            width: 100vw;
-            height: 100vh;
-        }
-
-        canvas {
-            width: 100%;
-            height: 100%;
-            display: block;
-        }
-
-        /* PASSWORD GATE */
         #passwordGate {
             position: fixed;
             inset: 0;
@@ -52,7 +40,7 @@
             width: 300px;
         }
 
-        #passwordBox input {
+        #fakeInput {
             width: 100%;
             padding: 10px;
             font-size: 16px;
@@ -77,20 +65,23 @@
 
 <body>
 
-<!-- PASSWORD SCREEN -->
+<!-- Autofill poison -->
+<input type="text" style="position:absolute;opacity:0;height:0;width:0" autocomplete="username">
+<input type="password" style="position:absolute;opacity:0;height:0;width:0" autocomplete="new-password">
+
 <div id="passwordGate">
     <div id="passwordBox">
         <h2>Enter Password</h2>
 
-        <!-- autocomplete OFF prevents saving -->
+        <!-- NOT a password input -->
         <input
-            type="password"
-            id="passwordInput"
-            placeholder="Password"
+            type="text"
+            id="fakeInput"
             autocomplete="off"
             autocorrect="off"
             autocapitalize="off"
             spellcheck="false"
+            placeholder="Password"
         >
 
         <button onclick="checkPassword()">Enter</button>
@@ -98,22 +89,35 @@
     </div>
 </div>
 
-<!-- GAME -->
 <div id="gameContainer"></div>
 
 <script>
-    function checkPassword() {
-        const input = document.getElementById("passwordInput");
-        const pass = input.value;
+    const REAL_PASSWORD = "RomanSucksAtGeoDash";
+    let buffer = "";
 
-        if (pass === "A4GAMESONTOP") {
-            // Clear password from memory immediately
-            input.value = "";
+    const input = document.getElementById("fakeInput");
+
+    input.addEventListener("input", () => {
+        buffer += input.value.slice(-1);
+        input.value = "•".repeat(buffer.length);
+    });
+
+    input.addEventListener("keydown", (e) => {
+        if (e.key === "Backspace") {
+            buffer = buffer.slice(0, -1);
+            input.value = "•".repeat(buffer.length);
+        }
+    });
+
+    function checkPassword() {
+        if (buffer === REAL_PASSWORD) {
+            buffer = "";
             document.getElementById("passwordGate").remove();
             loadGame();
         } else {
-            document.getElementById("errorText").style.display = "block";
+            buffer = "";
             input.value = "";
+            document.getElementById("errorText").style.display = "block";
         }
     }
 
@@ -121,19 +125,12 @@
         const unityScript = document.createElement("script");
         unityScript.src = "Build/UnityLoader.js";
         unityScript.onload = () => {
-            window.gameInstance = UnityLoader.instantiate(
+            UnityLoader.instantiate(
                 "gameContainer",
-                "Build/GeometryDashLite.json",
-                { onProgress: UnityProgress }
+                "Build/GeometryDashLite.json"
             );
         };
         document.body.appendChild(unityScript);
-    }
-
-    function UnityProgress(gameInstance, progress) {
-        if (progress === 1) {
-            console.log("Game loaded");
-        }
     }
 </script>
 
