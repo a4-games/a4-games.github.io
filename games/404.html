@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>404 - Page Not Found</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(rgb(0,0,0), rgb(0,102,255));
+            color: white;
+            overflow: hidden;
+        }
+
+        .container {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            flex-direction: column;
+        }
+
+        h1 {
+            font-size: 120px;
+            margin: 0;
+            line-height: 1;
+        }
+
+        h2 {
+            margin: 10px 0;
+            font-size: 28px;
+        }
+
+        p {
+            max-width: 400px;
+            opacity: 0.85;
+        }
+
+        a {
+            margin-top: 25px;
+            text-decoration: none;
+            color: black;
+            background: white;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: transform 0.15s ease, background 0.15s ease;
+        }
+
+        a:hover {
+            transform: scale(1.05);
+            background: #e0e0e0;
+        }
+
+        .cube {
+            margin-top: 40px;
+            width: 50px;
+            height: 50px;
+            background: yellow;
+            animation: jump 1s infinite ease-in-out;
+        }
+
+        @keyframes jump {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-25px); }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>404</h1>
+        <h2>Page Not Found</h2>
+        <p>
+            Couldn't find game, let me know which game is broken and I'll fix it within 3 days.
+        </p>
+
+        <a href="/">Go Home</a>
+
+        <div class="cube"></div>
+    </div>
+</body>
+</html>
