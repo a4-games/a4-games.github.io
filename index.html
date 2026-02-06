@@ -185,6 +185,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      text-decoration: none;
     }
 
     .icon-btn::before {
@@ -230,6 +231,14 @@
 
     .icon-btn.active {
       background: rgba(255, 255, 255, 0.1);
+    }
+
+    .icon-btn.panic {
+      border-color: rgba(255, 50, 50, 0.5);
+    }
+
+    .icon-btn.panic:hover {
+      border-color: rgba(255, 50, 50, 0.8);
     }
 
     .grid {
@@ -354,9 +363,12 @@
       </div>
       <button class="icon-btn" id="searchBtn">
         <i class="fas fa-search"></i>
-        </button>
-      <button class="icon-btn" id="downloadBtn">
+      </button>
+      <a href="/downloads.html" class="icon-btn" id="downloadBtn">
         <i class="fas fa-download"></i>
+      </a>
+      <button class="icon-btn panic" id="panicBtn" title="Emergency Close">
+        <i class="fa-solid fa-exclamation"></i>
       </button>
       <button class="icon-btn" id="cloakBtn">
         <i class="fas fa-ban"></i>
@@ -406,7 +418,7 @@
   </div>
 
   <script>
-    // 3D Rotation for Game Boxes
+    // 3D Rotation for Game Boxes (INVERTED DEPTH)
     document.querySelectorAll('.game-box').forEach(box => {
       box.addEventListener('mousemove', (e) => {
         const rect = box.getBoundingClientRect();
@@ -419,8 +431,9 @@
         const percentX = (x / rect.width) * 100;
         const percentY = (y / rect.height) * 100;
         
-        const rotateX = ((y - centerY) / centerY) * 15;
-        const rotateY = ((x - centerX) / centerX) * -15;
+        // INVERTED: Negative rotations so the side closer to mouse appears nearer
+        const rotateX = -((y - centerY) / centerY) * 15;
+        const rotateY = -((x - centerX) / centerX) * -15;
         
         const angle = Math.atan2(y - centerY, x - centerX) * (180 / Math.PI);
         
@@ -457,8 +470,20 @@
     }
 
     addGlowEffect(document.querySelector('.search-wrapper'));
-    addGlowEffect(document.querySelector('.a4host-btn'));
     document.querySelectorAll('.icon-btn').forEach(btn => addGlowEffect(btn));
+
+    // Panic button functionality
+    const panicBtn = document.getElementById('panicBtn');
+    panicBtn.addEventListener('click', () => {
+      // Close the current tab/window
+      window.close();
+      
+      // If window.close() doesn't work (most modern browsers block it),
+      // redirect to a safe page
+      setTimeout(() => {
+        window.location.href = 'https://clever.com/login?student&_gl=1*113xzc1*_ga*NDU3MTU5MTM2LjE3NTU4MjQzNzU.*_ga_RKDHZLJBH6*czE3NzAzNDM2MzkkbzM3JGcwJHQxNzcwMzQzNjM5JGo2MCRsMCRoMA..';
+      }, 01);
+    });
 
     // Cloak functionality
     let isCloaked = false;
