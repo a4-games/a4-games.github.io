@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A4PLAY</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #000;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      padding: 40px 20px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .header h1 {
+      font-size: 3.5rem;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, #fff 0%, #888 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 30px;
+    }
+
+    .search-container {
+      display: flex;
+      gap: 12px;
+      max-width: 800px;
+      margin: 0 auto;
+      align-items: center;
+    }
+
+    .a4host-btn {
+      padding: 14px 24px;
+      background: #000;
+      border: 1px solid rgba(128, 128, 128, 0.3);
+      border-radius: 12px;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.1s ease-out;
+      position: relative;
+      overflow: hidden;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .a4host-btn::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      border-radius: 12px;
+      padding: 2px;
+      background: conic-gradient(
+        from var(--angle, 0deg) at var(--x, 50%) var(--y, 50%),
+        transparent 0deg,
+        rgba(128, 128, 128, 0.4) 90deg,
+        transparent 180deg,
+        transparent 360deg
+      );
+      -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .a4host-btn:hover::before {
+      background: conic-gradient(
+        from var(--angle, 0deg) at var(--x, 50%) var(--y, 50%),
+        transparent 0deg,
+        rgba(255, 255, 255, 0.8) 90deg,
+        transparent 180deg,
+        transparent 360deg
+      );
+      opacity: 1;
+    }
+
+    .a4host-btn:active {
+      transform: scale(0.95);
+    }
+
+    .search-wrapper {
+      flex: 1;
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .search-wrapper::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      border-radius: 12px;
+      padding: 2px;
+      background: conic-gradient(
+        from var(--angle, 0deg) at var(--x, 50%) var(--y, 50%),
+        transparent 0deg,
+        rgba(128, 128, 128, 0.4) 90deg,
+        transparent 180deg,
+        transparent 360deg
+      );
+      -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 1;
+    }
+
+    .search-wrapper:hover::before {
+      background: conic-gradient(
+        from var(--angle, 0deg) at var(--x, 50%) var(--y, 50%),
+        transparent 0deg,
+        rgba(255, 255, 255, 0.8) 90deg,
+        transparent 180deg,
+        transparent 360deg
+      );
+      opacity: 1;
+    }
+
+    .search-bar {
+      width: 100%;
+      padding: 14px 20px;
+      background: #000;
+      border: 1px solid rgba(128, 128, 128, 0.3);
+      border-radius: 12px;
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      position: relative;
+      z-index: 2;
+    }
+
+    .search-bar::placeholder {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    .icon-btn {
+      width: 50px;
+      height: 50px;
+      background: #000;
+      border: 1px solid rgba(128, 128, 128, 0.3);
+      border-radius: 12px;
+      color: #fff;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: transform 0.1s ease-out;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .icon-btn::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      border-radius: 12px;
+      padding: 2px;
+      background: conic-gradient(
+        from var(--angle, 0deg) at var(--x, 50%) var(--y, 50%),
+        transparent 0deg,
+        rgba(128, 128, 128, 0.4) 90deg,
+        transparent 180deg,
+        transparent 360deg
+      );
+      -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .icon-btn:hover::before {
+      background: conic-gradient(
+        from var(--angle, 0deg) at var(--x, 50%) var(--y, 50%),
+        transparent 0deg,
+        rgba(255, 255, 255, 0.8) 90deg,
+        transparent 180deg,
+        transparent 360deg
+      );
+      opacity: 1;
+    }
+
+    .icon-btn:active {
+      transform: scale(0.95);
+    }
+
+    .icon-btn.active {
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+      margin: 48px 0;
+      perspective: 1000px;
+      max-width: 1400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .game-box {
+      background: #000;
+      border-radius: 16px;
+      padding: 16px;
+      text-decoration: none;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.1s ease-out;
+      transform-style: preserve-3d;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(128, 128, 128, 0.3);
+    }
+
+    .game-box.hidden {
+      display: none;
+    }
+
+    .game-box::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      border-radius: 16px;
+      padding: 2px;
+      background: conic-gradient(
+        from var(--angle, 0deg) at var(--x, 50%) var(--y, 50%),
+        transparent 0deg,
+        rgba(128, 128, 128, 0.4) 90deg,
+        transparent 180deg,
+        transparent 360deg
+      );
+      -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .game-box:hover::before {
+      background: conic-gradient(
+        from var(--angle, 0deg) at var(--x, 50%) var(--y, 50%),
+        transparent 0deg,
+        rgba(255, 255, 255, 0.8) 90deg,
+        transparent 180deg,
+        transparent 360deg
+      );
+      opacity: 1;
+    }
+
+    .game-box img {
+      width: 100%;
+      aspect-ratio: 1/1;
+      object-fit: cover;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.9);
+      transition: transform 0.1s ease-out;
+    }
+
+    .game-title {
+      margin-top: 14px;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: #fff;
+      text-align: center;
+      font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+    }
+
+    .mini-tag {
+      margin-top: 8px;
+      font-weight: 700;
+      font-size: 0.65rem;
+      color: #fff;
+      text-align: center;
+      font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      opacity: 0.7;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 60px 20px;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 1.2rem;
+      display: none;
+    }
+
+    .no-results.show {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>A4PLAY</h1>
+    <div class="search-container">
+      <div class="search-wrapper">
+        <input type="text" class="search-bar" placeholder="Search games...">
+      </div>
+      <button class="icon-btn" id="searchBtn">
+        <i class="fas fa-search"></i>
+        </button>
+      <button class="icon-btn" id="downloadBtn">
+        <i class="fas fa-download"></i>
+      </button>
+      <button class="icon-btn" id="cloakBtn">
+        <i class="fas fa-ban"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="no-results" id="noResults">Uhh... We didn't find that game!</div>
+
+  <div class="grid" id="gameGrid">
+    <a href="/games/deltarune.html" class="game-box" data-title="DELTARUNE" data-tag="RPG">
+      <img src="https://cdn2.steamgriddb.com/icon/6e2d5d50a943a0e0d738377f51011685/32/256x256.png" alt="Game 1">
+      <div class="game-title">DELTARUNE</div>
+      <div class="mini-tag">RPG</div>
+    </a>
+    
+    <a href="/games/oneshot.html" class="game-box" data-title="ONESHOT" data-tag="ADVENTURE">
+      <img src="https://cdn2.steamgriddb.com/icon/79e410fb9488b208773459fa9249205f/32/1024x1024.png" alt="Game 2">
+      <div class="game-title">ONESHOT</div>
+      <div class="mini-tag">ADVENTURE</div>
+    </a>
+    
+    <a href="/games/buckshotroulette.html" class="game-box" data-title="BuckshotRoulette" data-tag="SIMULATION">
+      <img src="https://cdn2.steamgriddb.com/icon/1292e5b9689d1e616e2034b44e1e701a/32/256x256.png" alt="Game 3">
+      <div class="game-title">Buckshot Roulette</div>
+      <div class="mini-tag">Horror/Simulation</div>
+    </a>
+    
+    <a href="/games/geometrydash.html" class="game-box" data-title="GeometryDash" data-tag="RYTHM">
+      <img src="https://cdn2.steamgriddb.com/icon/ea2af5ea4aabdca1d9ded27f252b8e41/32/256x256.png" alt="Game 4">
+      <div class="game-title">Geometry Dash</div>
+      <div class="mini-tag">rythm (NOW UNLOCKED)
+      </div>
+    </a>
+
+    <a href="/games/basketballstars.html" class="game-box" data-title="BasketballStars" data-tag="SPORTS">
+      <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/272.png" alt="Game 5">
+      <div class="game-title">Basketball Stars</div>
+      <div class="mini-tag">SPORTS</div>
+    </a>
+
+    <a href="/games/bindingofisaaclamb.html" class="game-box" data-title="BindingofIsaacWrathoftheLamb" data-tag="RPG">
+      <img src="https://cdn2.steamgriddb.com/icon/ca0226c1b273bb50a210ba4a8db4ce8c/32/256x256.png" alt="Game 6">
+      <div class="game-title">Binding of Isaac: Wrath of the Lamb</div>
+      <div class="mini-tag">RPG</div>
+    </a>
+  </div>
+
+  <script>
+    // 3D Rotation for Game Boxes
+    document.querySelectorAll('.game-box').forEach(box => {
+      box.addEventListener('mousemove', (e) => {
+        const rect = box.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        const percentX = (x / rect.width) * 100;
+        const percentY = (y / rect.height) * 100;
+        
+        const rotateX = ((y - centerY) / centerY) * 15;
+        const rotateY = ((x - centerX) / centerX) * -15;
+        
+        const angle = Math.atan2(y - centerY, x - centerX) * (180 / Math.PI);
+        
+        box.style.setProperty('--x', `${percentX}%`);
+        box.style.setProperty('--y', `${percentY}%`);
+        box.style.setProperty('--angle', `${angle}deg`);
+        box.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.02)`;
+      });
+      
+      box.addEventListener('mouseleave', () => {
+        box.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
+      });
+    });
+
+    // Glow effect for buttons and search bar
+    function addGlowEffect(element) {
+      element.addEventListener('mousemove', (e) => {
+        const rect = element.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const percentX = (x / rect.width) * 100;
+        const percentY = (y / rect.height) * 100;
+        
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        const angle = Math.atan2(y - centerY, x - centerX) * (180 / Math.PI);
+        
+        element.style.setProperty('--x', `${percentX}%`);
+        element.style.setProperty('--y', `${percentY}%`);
+        element.style.setProperty('--angle', `${angle}deg`);
+      });
+    }
+
+    addGlowEffect(document.querySelector('.search-wrapper'));
+    addGlowEffect(document.querySelector('.a4host-btn'));
+    document.querySelectorAll('.icon-btn').forEach(btn => addGlowEffect(btn));
+
+    // Cloak functionality
+    let isCloaked = false;
+    const originalTitle = document.title;
+    const originalFavicon = document.querySelector('link[rel="icon"]')?.href || '';
+
+    const cloakBtn = document.getElementById('cloakBtn');
+    const cloakIcon = cloakBtn.querySelector('i');
+
+    cloakBtn.addEventListener('click', () => {
+      isCloaked = !isCloaked;
+      
+      if (isCloaked) {
+        // Cloak the tab - disguise as Google
+        document.title = 'Google';
+        
+        // Change favicon to Google's
+        let favicon = document.querySelector('link[rel="icon"]');
+        if (!favicon) {
+          favicon = document.createElement('link');
+          favicon.rel = 'icon';
+          document.head.appendChild(favicon);
+        }
+        favicon.href = 'https://www.google.com/favicon.ico';
+        
+        // Update button
+        cloakIcon.className = 'fas fa-eye-slash';
+        cloakBtn.classList.add('active');
+      } else {
+        // Uncloak - restore original
+        document.title = originalTitle;
+        
+        let favicon = document.querySelector('link[rel="icon"]');
+        if (favicon) {
+          if (originalFavicon) {
+            favicon.href = originalFavicon;
+          } else {
+            favicon.remove();
+          }
+        }
+        
+        // Update button
+        cloakIcon.className = 'fas fa-ban';
+        cloakBtn.classList.remove('active');
+      }
+    });
+
+    // Search functionality
+    const searchBar = document.querySelector('.search-bar');
+    const searchBtn = document.getElementById('searchBtn');
+    const gameBoxes = document.querySelectorAll('.game-box');
+    const noResults = document.getElementById('noResults');
+
+    function performSearch() {
+      const searchValue = searchBar.value.toLowerCase().trim();
+      let visibleCount = 0;
+
+      gameBoxes.forEach(box => {
+        const title = box.getAttribute('data-title').toLowerCase();
+        const tag = box.getAttribute('data-tag').toLowerCase();
+        
+        if (searchValue === '' || title.includes(searchValue) || tag.includes(searchValue)) {
+          box.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          box.classList.add('hidden');
+        }
+      });
+
+      // Show/hide no results message
+      if (visibleCount === 0) {
+        noResults.classList.add('show');
+      } else {
+        noResults.classList.remove('show');
+      }
+    }
+
+    // Search on button click
+    searchBtn.addEventListener('click', performSearch);
+
+    // Search on Enter key
+    searchBar.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        performSearch();
+      }
+    });
+
+    // Real-time search as you type
+    searchBar.addEventListener('input', performSearch);
+  </script>
+</body>
+</html>
