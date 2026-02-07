@@ -241,6 +241,101 @@
       border-color: rgba(255, 50, 50, 0.8);
     }
 
+    .update-log {
+      max-width: 1400px;
+      margin: 0 auto 40px auto;
+      background: #000;
+      border-radius: 16px;
+      padding: 24px;
+      border: 1px solid rgba(128, 128, 128, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .update-log::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      border-radius: 16px;
+      padding: 2px;
+      background: conic-gradient(
+        from var(--angle, 0deg) at var(--x, 50%) var(--y, 50%),
+        transparent 0deg,
+        rgba(128, 128, 128, 0.4) 90deg,
+        transparent 180deg,
+        transparent 360deg
+      );
+      -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .update-log:hover::before {
+      background: conic-gradient(
+        from var(--angle, 0deg) at var(--x, 50%) var(--y, 50%),
+        transparent 0deg,
+        rgba(255, 255, 255, 0.8) 90deg,
+        transparent 180deg,
+        transparent 360deg
+      );
+      opacity: 1;
+    }
+
+    .update-log h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+      color: #fff;
+      font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .update-item {
+      margin-bottom: 0;
+    }
+
+    .update-date {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.5);
+      font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .update-content {
+      font-size: 1rem;
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.6;
+    }
+
+    .update-content ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .update-content li {
+      padding-left: 20px;
+      position: relative;
+      margin-bottom: 8px;
+    }
+
+    .update-content li:before {
+      content: '▸';
+      position: absolute;
+      left: 0;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
     .grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -340,6 +435,12 @@
       text-transform: uppercase;
       opacity: 0.7;
     }
+    .site-title {
+      max-width: 420px;
+      width: 100%;
+      height: auto;
+      margin-bottom: 30px;
+    }
 
     .no-results {
       text-align: center;
@@ -356,14 +457,17 @@
 </head>
 <body>
   <div class="header">
-    <h1>A4PLAY</h1>
+    <img src="a4title.png" alt="A4PLAY" class="site-title">
     <div class="search-container">
       <div class="search-wrapper">
         <input type="text" class="search-bar" placeholder="Search games...">
       </div>
-      <button class="icon-btn" id="searchBtn">
-        <i class="fas fa-search"></i>
-      </button>
+      <a href="/emulators.html" class="icon-btn" title="Emulators">
+        <i class="fa-solid fa-gamepad"></i>
+      </a>
+      <a href="/roms.html" class="icon-btn" title="ROMs">
+        <i class="fa-solid fa-file"></i>
+      </a>
       <a href="/downloads.html" class="icon-btn" id="downloadBtn">
         <i class="fas fa-download"></i>
       </a>
@@ -373,6 +477,21 @@
       <button class="icon-btn" id="cloakBtn">
         <i class="fas fa-ban"></i>
       </button>
+    </div>
+  </div>
+
+  <div class="update-log" id="updateLog">
+    <h2>UPDATE LOG</h2>
+    
+    <div class="update-item">
+      <div class="update-date">Feb 06, 2026</div>
+      <div class="update-content">
+        <ul>
+          <li><strong>Added new games</strong> including Geometry Dash, Flappy Bird, and Five Nights at Freddy's.</li>
+          <li><strong>New Emulators section</strong> to play classic console games</li>
+          <li><strong>Improved search</strong> now searches both titles and tags in real-time</li>
+        </ul>
+      </div>
     </div>
   </div>
 
@@ -400,8 +519,7 @@
     <a href="/games/geodash.html" class="game-box" data-title="GeometryDash" data-tag="RYTHM">
       <img src="https://cdn2.steamgriddb.com/icon/ea2af5ea4aabdca1d9ded27f252b8e41/32/256x256.png" alt="Game 4">
       <div class="game-title">Geometry Dash</div>
-      <div class="mini-tag">rythm (NOW UNLOCKED)
-      </div>
+      <div class="mini-tag">rythm (NOW UNLOCKED)</div>
     </a>
 
     <a href="/games/basketballstars.html" class="game-box" data-title="BasketballStars" data-tag="SPORTS">
@@ -415,41 +533,186 @@
       <div class="game-title">Binding of Isaac: Wrath of the Lamb</div>
       <div class="mini-tag">RPG</div>
     </a>
+
     <a href="/games/bloxorz.html" class="game-box" data-title="BLOXORZ" data-tag="PUZZLE">
       <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/169.png" alt="Game 7">
       <div class="game-title">BLOXORZ</div>
       <div class="mini-tag">PUZZLE</div>
     </a>
-  <a href="/games/cavestory.html" class="game-box" data-title="Cave Story" data-tag="RPG"><img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/632.png" alt=""><div class="game-title">Cave Story</div><div class="mini-tag">RPG</div></a>
-  <a href="/games/celeste.html" class="game-box" data-title="Celeste" data-tag="PLATFORMER"><img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/623.png" alt=""><div class="game-title">Celeste</div><div class="mini-tag">PLATFORMER</div></a>
-  <a href="/games/crossyroad.html" class="game-box" data-title="Crossy Road" data-tag="RUNNING"><img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/24.png" alt=""><div class="game-title">Crossy Road</div><div class="mini-tag">RUNNING</div></a>
-  <a href="/games/doom.html" class="game-box" data-title="Doom" data-tag="SHOOTER"><img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/203.png" alt=""><div class="game-title">Doom</div><div class="mini-tag">SHOOTER</div></a>
-  <a href="/games/fancypants.html" class="game-box" data-title="Fancy Pants" data-tag="PLATFORMER"><img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/333.png" alt=""><div class="game-title">Fancy Pants</div><div class="mini-tag">PLATFORMER</div></a>
-  <a href="/games/fancypants2.html" class="game-box" data-title="Fancy Pants 2" data-tag="PLATFORMER"><img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/334.png" alt=""><div class="game-title">Fancy Pants 2</div><div class="mini-tag">PLATFORMER</div></a>
-  <a href="/games/fancypants3.html" class="game-box" data-title="Fancy Pants 3" data-tag="PLATFORMER"><img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/335.png" alt=""><div class="game-title">Fancy Pants 3</div><div class="mini-tag">PLATFORMER</div></a>
-  <a href="/games/flappy.html" class="game-box" data-title="Flappy Bird" data-tag="RUNNING"><img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/129.png" alt=""><div class="game-title">Flappy Bird</div><div class="mini-tag">RUNNING</div></a>
-  <a href="/games/fnac.html" class="game-box" data-title="Five Nights at Candy's" data-tag="HORROR"><img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/503.png" alt=""><div class="game-title">Five Nights at Candy's</div><div class="mini-tag">HORROR</div></a>
-  <a href="/games/fnaf1.html" class="game-box" data-title="Five Nights at Freddy's 1" data-tag="HORROR"><img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/38.png" alt=""><div class="game-title">Five Nights at Freddy's 1</div><div class="mini-tag">HORROR</div></a>
-  <a href="/games/fnaf2.html" class="game-box" data-title="Five Nights at Freddy's 2" data-tag="HORROR"><img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/39.png" alt=""><div class="game-title">Five Nights at Freddy's 2</div><div class="mini-tag">HORROR</div></a>
-  <a href="/games/fnaf3.html" class="game-box" data-title="Five Nights at Freddy's 3" data-tag="HORROR"><img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/40.png" alt=""><div class="game-title">Five Nights at Freddy's 3</div><div class="mini-tag">HORROR</div></a>
-  <a href="/games/fnaf4.html" class="game-box" data-title="Five Nights at Freddy's 4" data-tag="HORROR"><img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/41.png" alt=""><div class="game-title">Five Nights at Freddy's 4</div><div class="mini-tag">HORROR</div></a>
-  <a href="/games/fnafsister.html" class="game-box" data-title="Five Nights at Freddy's: Sister Location" data-tag="HORROR"><img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/185.png" alt=""><div class="game-title">Five Nights at Freddy's: Sister Location</div><div class="mini-tag">HORROR</div></a>
-  <a href="/games/fnafcustom.html" class="game-box" data-title="Five Nights at Freddy's: Ultimate Custom Night" data-tag="HORROR"><img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/192.png" alt=""><div class="game-title">Five Nights at Freddy's: Ultimate Custom Night</div><div class="mini-tag">HORROR</div></a>
-  <a href="/games/fnafworld.html" class="game-box" data-title="Five Nights at Freddy's: World" data-tag="HORROR"><img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/190.png" alt=""><div class="game-title">Five Nights at Freddy's: World</div><div class="mini-tag">HORROR</div></a>
-  <a href="/games/jellydrift.html" class="game-box" data-title="Jelly Drift" data-tag="RUNNING"><img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/543.png" alt=""><div class="game-title">Jelly Drift</div><div class="mini-tag">RUNNING</div></a>
-  <a href="/games/learntofly.html" class="game-box" data-title="Learn to Fly" data-tag="PLATFORMER"><img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/340.png" alt=""><div class="game-title">Learn to Fly</div><div class="mini-tag">PLATFORMER</div></a>
-  <a href="/games/learntofly2.html" class="game-box" data-title="Learn to Fly 3" data-tag="PLATFORMER"><img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/342.png" alt=""><div class="game-title">Learn to Fly 2</div><div class="mini-tag">PLATFORMER</div></a>
-  <a href="/games/minecraftfast.html" class="game-box" data-title="Minecraft" data-tag="Simulation"><img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/182.png" alt=""><div class="game-title">Minecraft</div><div class="mini-tag">Simulation</div></a>
-  <a href="/games/pizzatower.html" class="game-box" data-title="Pizza Tower" data-tag="PLATFORMER"><img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/267.png" alt=""><div class="game-title">Pizza Tower</div><div class="mini-tag">PLATFORMER</div></a>
-  <a href="/games/playground.html" class="game-box" data-title="People Playground" data-tag="PLAYGROUND"><img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/194-m.png" alt=""><div class="game-title">People Playground</div><div class="mini-tag">PLAYGROUND</div></a>
-  <a href="/games/raft.html" class="game-box" data-title="Raft" data-tag="SIMULATION"><img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/457.png" alt=""><div class="game-title">Raft</div><div class="mini-tag">SIMULATION</div></a>
-  <a href="/games/sab.html" class="game-box" data-title="Steal a Brainrot" data-tag="BRAINROT"><img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/479.png" alt=""><div class="game-title">Steal a Brainrot</div><div class="mini-tag">BRAINROT</div></a>
-  <a href="/games/slimerancher.html" class="game-box" data-title="Slime Rancher" data-tag="SIMULATION"><img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/591.png" alt=""><div class="game-title">Slime Rancher</div><div class="mini-tag">SIMULATION</div></a>
-  <a href="/games/slowroads.html" class="game-box" data-title="slowroads" data-tag="DRIVING"><img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/369.png" alt=""><div class="game-title">slowroads</div><div class="mini-tag">DRIVING</div></a>
-  <a href="/games/snowrider.html" class="game-box" data-title="Snow Rider" data-tag="RUNNING"><img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/119.png" alt=""><div class="game-title">Snow Rider</div><div class="mini-tag">RUNNING</div></a>
-  <a href="/games/tombofthemask.html" class="game-box" data-title="Tomb of the Mask" data-tag="2D"><img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/109.png" alt=""><div class="game-title">Tomb of the Mask</div><div class="mini-tag">2D</div></a>
-  <a href="/games/wordle.html" class="game-box" data-title="Wordle" data-tag="PUZZLE"><img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/112.png" alt=""><div class="game-title">Wordle</div><div class="mini-tag">PUZZLE</div></a>
 
+    <a href="/games/cavestory.html" class="game-box" data-title="Cave Story" data-tag="RPG">
+      <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/632.png" alt="">
+      <div class="game-title">Cave Story</div>
+      <div class="mini-tag">RPG</div>
+    </a>
+
+    <a href="/games/celeste.html" class="game-box" data-title="Celeste" data-tag="PLATFORMER">
+      <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/623.png" alt="">
+      <div class="game-title">Celeste</div>
+      <div class="mini-tag">PLATFORMER</div>
+    </a>
+
+    <a href="/games/crossyroad.html" class="game-box" data-title="Crossy Road" data-tag="RUNNING">
+      <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/24.png" alt="">
+      <div class="game-title">Crossy Road</div>
+      <div class="mini-tag">RUNNING</div>
+    </a>
+
+    <a href="/games/doom.html" class="game-box" data-title="Doom" data-tag="SHOOTER">
+      <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/203.png" alt="">
+      <div class="game-title">Doom</div>
+      <div class="mini-tag">SHOOTER</div>
+    </a>
+
+    <a href="/games/fancypants.html" class="game-box" data-title="Fancy Pants" data-tag="PLATFORMER">
+      <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/333.png" alt="">
+      <div class="game-title">Fancy Pants</div>
+      <div class="mini-tag">PLATFORMER</div>
+    </a>
+
+    <a href="/games/fancypants2.html" class="game-box" data-title="Fancy Pants 2" data-tag="PLATFORMER">
+      <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/334.png" alt="">
+      <div class="game-title">Fancy Pants 2</div>
+      <div class="mini-tag">PLATFORMER</div>
+    </a>
+
+    <a href="/games/fancypants3.html" class="game-box" data-title="Fancy Pants 3" data-tag="PLATFORMER">
+      <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/335.png" alt="">
+      <div class="game-title">Fancy Pants 3</div>
+      <div class="mini-tag">PLATFORMER</div>
+    </a>
+
+    <a href="/games/flappy.html" class="game-box" data-title="Flappy Bird" data-tag="RUNNING">
+      <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/129.png" alt="">
+      <div class="game-title">Flappy Bird</div>
+      <div class="mini-tag">RUNNING</div>
+    </a>
+
+    <a href="/games/fnac.html" class="game-box" data-title="Five Nights at Candy's" data-tag="HORROR">
+      <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/503.png" alt="">
+      <div class="game-title">Five Nights at Candy's</div>
+      <div class="mini-tag">HORROR</div>
+    </a>
+
+    <a href="/games/fnaf1.html" class="game-box" data-title="Five Nights at Freddy's 1" data-tag="HORROR">
+      <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/38.png" alt="">
+      <div class="game-title">Five Nights at Freddy's 1</div>
+      <div class="mini-tag">HORROR</div>
+    </a>
+
+    <a href="/games/fnaf2.html" class="game-box" data-title="Five Nights at Freddy's 2" data-tag="HORROR">
+      <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/39.png" alt="">
+      <div class="game-title">Five Nights at Freddy's 2</div>
+      <div class="mini-tag">HORROR</div>
+    </a>
+
+    <a href="/games/fnaf3.html" class="game-box" data-title="Five Nights at Freddy's 3" data-tag="HORROR">
+      <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/40.png" alt="">
+      <div class="game-title">Five Nights at Freddy's 3</div>
+      <div class="mini-tag">HORROR</div>
+    </a>
+
+    <a href="/games/fnaf4.html" class="game-box" data-title="Five Nights at Freddy's 4" data-tag="HORROR">
+      <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/41.png" alt="">
+      <div class="game-title">Five Nights at Freddy's 4</div>
+      <div class="mini-tag">HORROR</div>
+    </a>
+
+    <a href="/games/fnafsister.html" class="game-box" data-title="Five Nights at Freddy's: Sister Location" data-tag="HORROR">
+      <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/185.png" alt="">
+      <div class="game-title">Five Nights at Freddy's: Sister Location</div>
+      <div class="mini-tag">HORROR</div>
+    </a>
+
+    <a href="/games/fnafcustom.html" class="game-box" data-title="Five Nights at Freddy's: Ultimate Custom Night" data-tag="HORROR">
+      <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/192.png" alt="">
+      <div class="game-title">Five Nights at Freddy's: Ultimate Custom Night</div>
+      <div class="mini-tag">HORROR</div>
+    </a>
+
+    <a href="/games/fnafworld.html" class="game-box" data-title="Five Nights at Freddy's: World" data-tag="HORROR">
+      <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/190.png" alt="">
+      <div class="game-title">Five Nights at Freddy's: World</div>
+      <div class="mini-tag">HORROR</div>
+    </a>
+
+    <a href="/games/jellydrift.html" class="game-box" data-title="Jelly Drift" data-tag="RUNNING">
+      <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/543.png" alt="">
+      <div class="game-title">Jelly Drift</div>
+      <div class="mini-tag">RUNNING</div>
+    </a>
+
+    <a href="/games/learntofly.html" class="game-box" data-title="Learn to Fly" data-tag="PLATFORMER">
+      <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/340.png" alt="">
+      <div class="game-title">Learn to Fly</div>
+      <div class="mini-tag">PLATFORMER</div>
+    </a>
+
+    <a href="/games/learntofly2.html" class="game-box" data-title="Learn to Fly 2" data-tag="PLATFORMER">
+      <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/342.png" alt="">
+      <div class="game-title">Learn to Fly 2</div>
+      <div class="mini-tag">PLATFORMER</div>
+    </a>
+
+    <a href="/games/minecraftfast.html" class="game-box" data-title="Minecraft" data-tag="Simulation">
+      <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/182.png" alt="">
+      <div class="game-title">Minecraft</div>
+      <div class="mini-tag">Simulation</div>
+    </a>
+
+    <a href="/games/pizzatower.html" class="game-box" data-title="Pizza Tower" data-tag="PLATFORMER">
+      <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/267.png" alt="">
+      <div class="game-title">Pizza Tower</div>
+      <div class="mini-tag">PLATFORMER</div>
+    </a>
+
+    <a href="/games/playground.html" class="game-box" data-title="People Playground" data-tag="PLAYGROUND">
+      <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/194-m.png" alt="">
+      <div class="game-title">People Playground</div>
+      <div class="mini-tag">PLAYGROUND</div>
+    </a>
+
+    <a href="/games/raft.html" class="game-box" data-title="Raft" data-tag="SIMULATION">
+      <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/457.png" alt="">
+      <div class="game-title">Raft</div>
+      <div class="mini-tag">SIMULATION</div>
+    </a>
+
+    <a href="/games/sab.html" class="game-box" data-title="Steal a Brainrot" data-tag="BRAINROT">
+      <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/479.png" alt="">
+      <div class="game-title">Steal a Brainrot</div>
+      <div class="mini-tag">BRAINROT</div>
+    </a>
+
+    <a href="/games/slimerancher.html" class="game-box" data-title="Slime Rancher" data-tag="SIMULATION">
+      <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/591.png" alt="">
+      <div class="game-title">Slime Rancher</div>
+      <div class="mini-tag">SIMULATION</div>
+    </a>
+
+    <a href="/games/slowroads.html" class="game-box" data-title="slowroads" data-tag="DRIVING">
+      <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/369.png" alt="">
+      <div class="game-title">slowroads</div>
+      <div class="mini-tag">DRIVING</div>
+    </a>
+
+    <a href="/games/snowrider.html" class="game-box" data-title="Snow Rider" data-tag="RUNNING">
+      <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/119.png" alt="">
+      <div class="game-title">Snow Rider</div>
+      <div class="mini-tag">RUNNING</div>
+    </a>
+
+    <a href="/games/tombofthemask.html" class="game-box" data-title="Tomb of the Mask" data-tag="2D">
+      <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/109.png" alt="">
+      <div class="game-title">Tomb of the Mask</div>
+      <div class="mini-tag">2D</div>
+    </a>
+
+    <a href="/games/wordle.html" class="game-box" data-title="Wordle" data-tag="PUZZLE">
+      <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/112.png" alt="">
+      <div class="game-title">Wordle</div>
+      <div class="mini-tag">PUZZLE</div>
+    </a>
   </div>
 
   <script>
@@ -466,7 +729,6 @@
         const percentX = (x / rect.width) * 100;
         const percentY = (y / rect.height) * 100;
         
-        // INVERTED: Negative rotations so the side closer to mouse appears nearer
         const rotateX = -((y - centerY) / centerY) * 15;
         const rotateY = -((x - centerX) / centerX) * -15;
         
@@ -483,7 +745,7 @@
       });
     });
 
-    // Glow effect for buttons and search bar
+    // Glow effect for buttons, search bar, and update log
     function addGlowEffect(element) {
       element.addEventListener('mousemove', (e) => {
         const rect = element.getBoundingClientRect();
@@ -505,19 +767,16 @@
     }
 
     addGlowEffect(document.querySelector('.search-wrapper'));
+    addGlowEffect(document.querySelector('.update-log'));
     document.querySelectorAll('.icon-btn').forEach(btn => addGlowEffect(btn));
 
     // Panic button functionality
     const panicBtn = document.getElementById('panicBtn');
     panicBtn.addEventListener('click', () => {
-      // Close the current tab/window
       window.close();
-      
-      // If window.close() doesn't work (most modern browsers block it),
-      // redirect to a safe page
       setTimeout(() => {
         window.location.href = 'https://clever.com/login?student&_gl=1*113xzc1*_ga*NDU3MTU5MTM2LjE3NTU4MjQzNzU.*_ga_RKDHZLJBH6*czE3NzAzNDM2MzkkbzM3JGcwJHQxNzcwMzQzNjM5JGo2MCRsMCRoMA..';
-      }, 01);
+      }, 1);
     });
 
     // Cloak functionality
@@ -532,10 +791,8 @@
       isCloaked = !isCloaked;
       
       if (isCloaked) {
-        // Cloak the tab - disguise as Google
         document.title = 'Google';
         
-        // Change favicon to Google's
         let favicon = document.querySelector('link[rel="icon"]');
         if (!favicon) {
           favicon = document.createElement('link');
@@ -544,11 +801,9 @@
         }
         favicon.href = 'https://www.google.com/favicon.ico';
         
-        // Update button
         cloakIcon.className = 'fas fa-eye-slash';
         cloakBtn.classList.add('active');
       } else {
-        // Uncloak - restore original
         document.title = originalTitle;
         
         let favicon = document.querySelector('link[rel="icon"]');
@@ -560,7 +815,6 @@
           }
         }
         
-        // Update button
         cloakIcon.className = 'fas fa-ban';
         cloakBtn.classList.remove('active');
       }
@@ -568,7 +822,6 @@
 
     // Search functionality
     const searchBar = document.querySelector('.search-bar');
-    const searchBtn = document.getElementById('searchBtn');
     const gameBoxes = document.querySelectorAll('.game-box');
     const noResults = document.getElementById('noResults');
 
@@ -588,7 +841,6 @@
         }
       });
 
-      // Show/hide no results message
       if (visibleCount === 0) {
         noResults.classList.add('show');
       } else {
@@ -596,17 +848,12 @@
       }
     }
 
-    // Search on button click
-    searchBtn.addEventListener('click', performSearch);
-
-    // Search on Enter key
     searchBar.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') {
         performSearch();
       }
     });
 
-    // Real-time search as you type
     searchBar.addEventListener('input', performSearch);
   </script>
 </body>
