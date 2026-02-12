@@ -42,69 +42,7 @@
       max-width: 800px;
       margin: 0 auto;
       align-items: center;
-    }
-
-    .a4host-btn {
-      padding: 14px 24px;
-      background: #000;
-      border: 1px solid rgba(128, 128, 128, 0.3);
-      border-radius: 12px;
-      color: #fff;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: transform 0.1s ease-out;
       position: relative;
-      overflow: hidden;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    .a4host-btn::before {
-      content: '';
-      position: absolute;
-      top: -2px;
-      left: -2px;
-      right: -2px;
-      bottom: -2px;
-      border-radius: 12px;
-      padding: 2px;
-      background: conic-gradient(
-        from var(--angle, 0deg) at var(--x, 50%) var(--y, 50%),
-        transparent 0deg,
-        rgba(128, 128, 128, 0.4) 90deg,
-        transparent 180deg,
-        transparent 360deg
-      );
-      -webkit-mask: 
-        linear-gradient(#fff 0 0) content-box, 
-        linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .a4host-btn:hover::before {
-      background: conic-gradient(
-        from var(--angle, 0deg) at var(--x, 50%) var(--y, 50%),
-        transparent 0deg,
-        rgba(255, 255, 255, 0.8) 90deg,
-        transparent 180deg,
-        transparent 360deg
-      );
-      opacity: 1;
-    }
-
-    .a4host-btn:active {
-      transform: scale(0.95);
     }
 
     .search-wrapper {
@@ -170,6 +108,128 @@
       color: rgba(255, 255, 255, 0.4);
     }
 
+    .dropdown-container {
+      position: relative;
+    }
+
+    .menu-btn {
+      width: 50px;
+      height: 50px;
+      background: #000;
+      border: 1px solid rgba(128, 128, 128, 0.3);
+      border-radius: 12px;
+      color: #fff;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: transform 0.1s ease-out;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .menu-btn::before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      border-radius: 12px;
+      padding: 2px;
+      background: conic-gradient(
+        from var(--angle, 0deg) at var(--x, 50%) var(--y, 50%),
+        transparent 0deg,
+        rgba(128, 128, 128, 0.4) 90deg,
+        transparent 180deg,
+        transparent 360deg
+      );
+      -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .menu-btn:hover::before {
+      background: conic-gradient(
+        from var(--angle, 0deg) at var(--x, 50%) var(--y, 50%),
+        transparent 0deg,
+        rgba(255, 255, 255, 0.8) 90deg,
+        transparent 180deg,
+        transparent 360deg
+      );
+      opacity: 1;
+    }
+
+    .menu-btn:active {
+      transform: scale(0.95);
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: 60px;
+      right: 0;
+      background: #000;
+      border: 1px solid rgba(128, 128, 128, 0.3);
+      border-radius: 12px;
+      padding: 8px;
+      min-width: 200px;
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 1000;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+    }
+
+    .dropdown-menu.show {
+      display: flex;
+    }
+
+    .dropdown-item {
+      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(128, 128, 128, 0.2);
+      border-radius: 8px;
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .dropdown-item:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateX(4px);
+    }
+
+    .dropdown-item i {
+      font-size: 1.1rem;
+      width: 20px;
+      text-align: center;
+    }
+
+    .dropdown-item.panic {
+      border-color: rgba(255, 50, 50, 0.4);
+    }
+
+    .dropdown-item.panic:hover {
+      border-color: rgba(255, 50, 50, 0.6);
+      background: rgba(255, 50, 50, 0.1);
+    }
+
     .icon-btn {
       width: 50px;
       height: 50px;
@@ -231,109 +291,6 @@
 
     .icon-btn.active {
       background: rgba(255, 255, 255, 0.1);
-    }
-
-    .icon-btn.panic {
-      border-color: rgba(255, 50, 50, 0.5);
-    }
-
-    .icon-btn.panic:hover {
-      border-color: rgba(255, 50, 50, 0.8);
-    }
-
-    .update-log {
-      max-width: 1400px;
-      margin: 0 auto 40px auto;
-      background: #000;
-      border-radius: 16px;
-      padding: 24px;
-      border: 1px solid rgba(128, 128, 128, 0.3);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .update-log::before {
-      content: '';
-      position: absolute;
-      top: -2px;
-      left: -2px;
-      right: -2px;
-      bottom: -2px;
-      border-radius: 16px;
-      padding: 2px;
-      background: conic-gradient(
-        from var(--angle, 0deg) at var(--x, 50%) var(--y, 50%),
-        transparent 0deg,
-        rgba(128, 128, 128, 0.4) 90deg,
-        transparent 180deg,
-        transparent 360deg
-      );
-      -webkit-mask: 
-        linear-gradient(#fff 0 0) content-box, 
-        linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity 0.3s ease;
-    }
-
-    .update-log:hover::before {
-      background: conic-gradient(
-        from var(--angle, 0deg) at var(--x, 50%) var(--y, 50%),
-        transparent 0deg,
-        rgba(255, 255, 255, 0.8) 90deg,
-        transparent 180deg,
-        transparent 360deg
-      );
-      opacity: 1;
-    }
-
-    .update-log h2 {
-      font-size: 1.5rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: -0.02em;
-      margin-bottom: 20px;
-      color: #fff;
-      font-family: 'Inter', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
-    }
-
-    .update-item {
-      margin-bottom: 0;
-    }
-
-    .update-date {
-      font-size: 0.85rem;
-      color: rgba(255, 255, 255, 0.5);
-      font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
-      margin-bottom: 8px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .update-content {
-      font-size: 1rem;
-      color: rgba(255, 255, 255, 0.8);
-      line-height: 1.6;
-    }
-
-    .update-content ul {
-      list-style: none;
-      padding-left: 0;
-    }
-
-    .update-content li {
-      padding-left: 20px;
-      position: relative;
-      margin-bottom: 8px;
-    }
-
-    .update-content li:before {
-      content: '▸';
-      position: absolute;
-      left: 0;
-      color: rgba(255, 255, 255, 0.5);
     }
 
     .grid {
@@ -435,6 +392,7 @@
       text-transform: uppercase;
       opacity: 0.7;
     }
+
     .site-title {
       max-width: 420px;
       width: 100%;
@@ -462,35 +420,37 @@
       <div class="search-wrapper">
         <input type="text" class="search-bar" placeholder="Search games...">
       </div>
-      <a href="/emulators.html" class="icon-btn" title="Emulators">
-        <i class="fa-solid fa-gamepad"></i>
-      </a>
-      <a href="/roms.html" class="icon-btn" title="ROMs">
-        <i class="fa-solid fa-file"></i>
-      </a>
-      <a href="/downloads.html" class="icon-btn" id="downloadBtn">
-        <i class="fas fa-download"></i>
-      </a>
-      <button class="icon-btn panic" id="panicBtn" title="Emergency Close">
-        <i class="fa-solid fa-exclamation"></i>
-      </button>
-      <button class="icon-btn" id="cloakBtn">
-        <i class="fas fa-ban"></i>
-      </button>
-    </div>
-  </div>
-
-  <div class="update-log" id="updateLog">
-    <h2>UPDATE LOG</h2>
-    
-    <div class="update-item">
-      <div class="update-date">Feb 06, 2026</div>
-      <div class="update-content">
-        <ul>
-          <li><strong>Added new games</strong> including Geometry Dash, Flappy Bird, and Five Nights at Freddy's.</li>
-          <li><strong>New Emulators section</strong> to play classic console games</li>
-          <li><strong>Improved search</strong> now searches both titles and tags in real-time</li>
-        </ul>
+      
+      <div class="dropdown-container">
+        <button class="menu-btn" id="menuBtn">
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="dropdown-menu" id="dropdownMenu">
+          <a href="/emulators.html" class="dropdown-item">
+            <i class="fa-solid fa-gamepad"></i>
+            <span>Emulators</span>
+          </a>
+          <a href="/roms.html" class="dropdown-item">
+            <i class="fa-solid fa-file"></i>
+            <span>ROMs</span>
+          </a>
+          <a href="/downloads.html" class="dropdown-item">
+            <i class="fas fa-download"></i>
+            <span>Downloads</span>
+          </a>
+          <a href="https://github.com/a4-games/a4-games.github.io" class="dropdown-item" target="_blank">
+            <i class="fa-brands fa-github"></i>
+            <span>GitHub</span>
+          </a>
+          <div class="dropdown-item panic" id="panicBtn">
+            <i class="fa-solid fa-exclamation"></i>
+            <span>Panic</span>
+          </div>
+          <div class="dropdown-item" id="cloakBtn">
+            <i class="fas fa-ban"></i>
+            <span>Cloak</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -498,7 +458,7 @@
   <div class="no-results" id="noResults">Uhh... We didn't find that game!</div>
 
   <div class="grid" id="gameGrid">
-    <a href="/games/deltarune.html" class="game-box" data-title="DELTARUNE" data-tag="RPG">
+    <a href="/deltarune-main/" class="game-box" data-title="DELTARUNE" data-tag="RPG">
       <img src="https://cdn2.steamgriddb.com/icon/6e2d5d50a943a0e0d738377f51011685/32/256x256.png" alt="Game 1">
       <div class="game-title">DELTARUNE</div>
       <div class="mini-tag">RPG</div>
@@ -648,9 +608,9 @@
       <div class="mini-tag">PLATFORMER</div>
     </a>
 
-    <a href="/games/learntofly2.html" class="game-box" data-title="Learn to Fly 2" data-tag="PLATFORMER">
+    <a href="/games/learntofly2.html" class="game-box" data-title="Learn to Fly 3" data-tag="PLATFORMER">
       <img src="https://cdn.jsdelivr.net/gh/gn-math/covers@main/342.png" alt="">
-      <div class="game-title">Learn to Fly 2</div>
+      <div class="game-title">Learn to Fly 3</div>
       <div class="mini-tag">PLATFORMER</div>
     </a>
 
@@ -820,7 +780,7 @@
       });
     });
 
-    // Glow effect for buttons, search bar, and update log
+    // Glow effect for buttons and search bar
     function addGlowEffect(element) {
       element.addEventListener('mousemove', (e) => {
         const rect = element.getBoundingClientRect();
@@ -842,8 +802,23 @@
     }
 
     addGlowEffect(document.querySelector('.search-wrapper'));
-    addGlowEffect(document.querySelector('.update-log'));
-    document.querySelectorAll('.icon-btn').forEach(btn => addGlowEffect(btn));
+    addGlowEffect(document.querySelector('.menu-btn'));
+
+    // Dropdown menu functionality
+    const menuBtn = document.getElementById('menuBtn');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+
+    menuBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      dropdownMenu.classList.toggle('show');
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!dropdownMenu.contains(e.target) && e.target !== menuBtn) {
+        dropdownMenu.classList.remove('show');
+      }
+    });
 
     // Panic button functionality
     const panicBtn = document.getElementById('panicBtn');
@@ -860,7 +835,6 @@
     const originalFavicon = document.querySelector('link[rel="icon"]')?.href || '';
 
     const cloakBtn = document.getElementById('cloakBtn');
-    const cloakIcon = cloakBtn.querySelector('i');
 
     cloakBtn.addEventListener('click', () => {
       isCloaked = !isCloaked;
@@ -876,8 +850,8 @@
         }
         favicon.href = 'https://www.google.com/favicon.ico';
         
-        cloakIcon.className = 'fas fa-eye-slash';
-        cloakBtn.classList.add('active');
+        cloakBtn.querySelector('i').className = 'fas fa-eye-slash';
+        cloakBtn.querySelector('span').textContent = 'Uncloak';
       } else {
         document.title = originalTitle;
         
@@ -890,8 +864,8 @@
           }
         }
         
-        cloakIcon.className = 'fas fa-ban';
-        cloakBtn.classList.remove('active');
+        cloakBtn.querySelector('i').className = 'fas fa-ban';
+        cloakBtn.querySelector('span').textContent = 'Cloak';
       }
     });
 
