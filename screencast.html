@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Screencast</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #000;
+    color: #fff;
+    font-family: monospace;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    padding: 2rem;
+  }
+  #screen {
+    width: 100%;
+    max-width: 900px;
+    aspect-ratio: 16/9;
+    background: #111;
+    border: 1px solid #333;
+    display: none;
+    object-fit: contain;
+  }
+  #screen.active { display: block; }
+  #placeholder {
+    width: 100%;
+    max-width: 900px;
+    aspect-ratio: 16/9;
+    background: #111;
+    border: 1px solid #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #444;
+    font-size: 0.85rem;
+  }
+  button {
+    background: #fff;
+    color: #000;
+    border: none;
+    padding: 0.6rem 1.6rem;
+    font-family: monospace;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+  button:hover { background: #ddd; }
+  #status {
+    font-size: 0.8rem;
+    color: #00ff88;
+    display: none;
+  }
+  #status.active { display: block; }
+</style>
+</head>
+<body>
+  <div id="placeholder">no signal</div>
+  <video id="screen" autoplay muted playsinline></video>
+  <button id="btn" onclick="startCast()">Start casting</button>
+  <div id="status">Exploit success</div>
+<script>
+  async function startCast() {
+    try {
+      const stream = await navigator.mediaDevices.getDisplayMedia({ video: true, audio: false });
+      const video = document.getElementById('screen');
+      video.srcObject = stream;
+      video.classList.add('active');
+      document.getElementById('placeholder').style.display = 'none';
+      document.getElementById('status').classList.add('active');
+      document.getElementById('btn').textContent = 'Stop casting';
+      document.getElementById('btn').onclick = () => stopCast(stream);
+      stream.getVideoTracks()[0].onended = () => stopCast(stream);
+    } catch (e) {
+      alert('Could not start screen capture: ' + e.message);
+    }
+  }
+  function stopCast(stream) {
+    stream.getTracks().forEach(t => t.stop());
+    const video = document.getElementById('screen');
+    video.srcObject = null;
+    video.classList.remove('active');
+    document.getElementById('placeholder').style.display = 'flex';
+    document.getElementById('status').classList.remove('active');
+    document.getElementById('btn').textContent = 'Start casting';
+    document.getElementById('btn').onclick = startCast;
+  }
+</script>
+</body>
+</html>
